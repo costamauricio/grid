@@ -8,16 +8,23 @@
       throw "Objeto inválido.";
     }
 
+    var lRenderizada = false,
+        lCheckbox = false;
+
     Object.defineProperty(this, 'oContainer', { 
       value : oElemento, 
       enumerable : true 
     });
 
-    Object.defineProperty(this, 'oHeader', { value : new DataGrid.TableHeader });
-    Object.defineProperty(this, 'oBody', { value : new DataGrid.TableBody });
-    Object.defineProperty(this, 'oFooter', { value : new DataGrid.TableFooter });
+    Object.defineProperty(this, 'oHeader', { value : new DataGrid.TableHeader(this) });
+    Object.defineProperty(this, 'oBody', { value : new DataGrid.TableBody(this) });
+    Object.defineProperty(this, 'oFooter', { value : new DataGrid.TableFooter(this) });
 
-    var lRenderizada = false;
+    Object.defineProperty(this, 'hasCheckbox', { 
+      get : function() { return lCheckbox; },
+      enumerable : true 
+    });
+
     // ,
     //     oFragmentBody = document.createDocumentFragment();
 
@@ -25,17 +32,47 @@
     
     // oFragment.appendChild(this.oBody.getElement());
 
-    DataGrid.prototype.makeGrid = function() {
+    /**
+     * Define que a grid terá uma coluna com checkbox
+     *
+     * @throws
+     * @return {DataGrid}
+     */
+    DataGrid.prototype.enableCheckbox = function() {
 
-      if (!lRenderizada) {
-        this.getContainer().appendChild(this.oHeader.getElement());
-        this.getContainer().appendChild(this.oBody.getElement());
-        this.getContainer().appendChild(this.oFooter.getElement());
+      if (lRenderizada) {
+        throw "Grid já renderizada.";
       }
 
-      lRenderizada = true;
+      if (this.getRowCount() > 0) {
+        throw "Já existem linhas na grid";
+      }
+
+      lCheckbox = true;
+
+      return this;
     }
 
+    /**
+     * Renderiza a Grid
+     *
+     * @throws
+     * @return {DataGrid}
+     */
+    DataGrid.prototype.makeGrid = function() {
+
+      if (lRenderizada) {
+        throw "Grid já renderizada.";
+      }
+
+      this.getContainer().appendChild(this.oHeader.getElement());
+      this.getContainer().appendChild(this.oBody.getElement());
+      this.getContainer().appendChild(this.oFooter.getElement());
+
+      lRenderizada = true;
+
+      return this;
+    }
   };
 
   /**
@@ -57,6 +94,10 @@
      */
     addRow : function(aColumns) {
       return this.getBody().newRow(aColumns);
+    },
+
+    getRowCount : function() {
+      return this.getRows().length;
     },
 
     /**
@@ -180,7 +221,16 @@
 
     'use strict';
 
-    var TableHeader = function() {
+    var TableHeader = function(oDataGrid) {
+
+      if ( !(oDataGrid instanceof DataGrid) ) {
+        throw "Erro ao criar o header.";
+      }
+
+      Object.defineProperty(this, "oDataGrid", { 
+        value : oDataGrid,
+        enumerable : true
+      });
 
       Object.defineProperty(this, "oElement", { 
         value : document.createElement("table"),
@@ -205,28 +255,18 @@
 
     'use strict';
 
-    /**
-     * DataGrid.TableBody.Row  --- Exteds DataGrid.TableRow 
-     */
-    ;(function(exports) {
+    var TableBody = function(oDataGrid) {
 
-      var Row = function() {
-        DataGrid.TableRow.call(this);
+      if ( !(oDataGrid instanceof DataGrid) ) {
+        throw "Erro ao criar o header.";
       }
 
-      Row.prototype = Object.create(DataGrid.TableRow.prototype);
+      Object.defineProperty(this, "oDataGrid", { 
+        value : oDataGrid,
+        enumerable : true
+      });
 
-      Row.prototype.addSelection = function() {
-
-      }
-
-      exports.Row = Row;
-    })(TableBody);
-
-
-    var TableBody = function() {
-
-      Object.defineProperty(this, "oElement", { 
+      Object.defineProperty(this, "oElement", {
         value : document.createElement("table"),
         enumerable : true
       });
@@ -262,6 +302,15 @@
 
         var oRow = new DataGrid.TableRow();
 
+        if (this.oDataGrid.hasCheckbox) {
+
+          var oCheckbox = document.createElement("input");
+          oCheckbox.type = "checkbox";
+
+          var oColumn = new DataGrid.TableColumn(oCheckbox);
+          oRow.addColumn(oColumn);
+        }
+
         for (var iRow = 0; iRow < aColumns.length; iRow++) {
 
           var oColumn = new DataGrid.TableColumn(aColumns[iRow]);
@@ -284,6 +333,10 @@
         return this;
       },
 
+      getRows : function() {
+        return this.aRows;
+      },
+
       /**
        * @return {Object}
        */
@@ -291,6 +344,24 @@
         return this.oElement;
       }
     }
+
+    /**
+     * DataGrid.TableBody.Row  --- Extends DataGrid.TableRow 
+     */
+    ;(function(exports) {
+
+      var Row = function() {
+        DataGrid.TableRow.call(this);
+      }
+
+      Row.prototype = Object.create(DataGrid.TableRow.prototype);
+
+      Row.prototype.addSelection = function() {
+
+      }
+
+      exports.Row = Row;
+    })(TableBody);
 
     exports.TableBody = TableBody;
   })(DataGrid);
@@ -302,7 +373,16 @@
 
     'use strict';
 
-    var TableFooter = function() {
+    var TableFooter = function(oDataGrid) {
+
+      if ( !(oDataGrid instanceof DataGrid) ) {
+        throw "Erro ao criar o header.";
+      }
+
+      Object.defineProperty(this, "oDataGrid", { 
+        value : oDataGrid,
+        enumerable : true
+      });
       
       Object.defineProperty(this, "oElement", { 
         value : document.createElement("table"),

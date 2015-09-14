@@ -3,7 +3,7 @@
   'use strict';
 
   var DataGrid = function(oElemento) {
-    
+
     if (typeof(oElemento) != "object") {
       throw "Objeto inválido.";
     }
@@ -11,26 +11,19 @@
     var lRenderizada = false,
         lCheckbox = false;
 
-    Object.defineProperty(this, 'oContainer', { 
-      value : oElemento, 
-      enumerable : true 
+    Object.defineProperty(this, 'oContainer', {
+      value : oElemento,
+      enumerable : true
     });
 
     Object.defineProperty(this, 'oHeader', { value : new DataGrid.TableHeader(this) });
     Object.defineProperty(this, 'oBody', { value : new DataGrid.TableBody(this) });
     Object.defineProperty(this, 'oFooter', { value : new DataGrid.TableFooter(this) });
 
-    Object.defineProperty(this, 'hasCheckbox', { 
+    Object.defineProperty(this, 'hasCheckbox', {
       get : function() { return lCheckbox; },
-      enumerable : true 
+      enumerable : true
     });
-
-    // ,
-    //     oFragmentBody = document.createDocumentFragment();
-
-    // var oFragment = document.createDocumentFragment();
-    
-    // oFragment.appendChild(this.oBody.getElement());
 
     /**
      * Define que a grid terá uma coluna com checkbox
@@ -79,6 +72,10 @@
    * Definição da Grid
    */
   DataGrid.prototype = {
+
+    addHeaderRow : function(aColumns) {
+      return this.getHeader().newRow(aColumns);
+    },
 
     /**
      * @return {DataGrid.TableRows[]}
@@ -138,7 +135,7 @@
 
     var TableRow = function(iRowId) {
 
-      Object.defineProperty(this, "oElement", { 
+      Object.defineProperty(this, "oElement", {
         value : document.createElement("tr"),
         enumerable : true
       });
@@ -158,6 +155,22 @@
         this.oElement.appendChild(oColumn.getElement());
       },
 
+      /**
+       * Retorna a Coluna pelo indice
+       *
+       * @param  {integer} iIndex
+       * @throw
+       * @return {DataGrid.TableColumn}
+       */
+      getColumnByIndex : function(iIndex) {
+
+        if (this.aColumns[iIndex] == undefined) {
+          throw "DataGrid.TableRow: Indice indefinido.";
+        }
+
+        return this.aColumns[iindex];
+      },
+
       getElement : function() {
         return this.oElement;
       }
@@ -175,7 +188,7 @@
 
     var TableColumn = function(conteudo) {
 
-      Object.defineProperty(this, "oElement", { 
+      Object.defineProperty(this, "oElement", {
         value : document.createElement("td"),
         enumerable : true
       });
@@ -227,18 +240,57 @@
         throw "Erro ao criar o header.";
       }
 
-      Object.defineProperty(this, "oDataGrid", { 
+      Object.defineProperty(this, "oDataGrid", {
         value : oDataGrid,
         enumerable : true
       });
 
-      Object.defineProperty(this, "oElement", { 
+      Object.defineProperty(this, "oElement", {
         value : document.createElement("table"),
         enumerable : true
       });
+
+      this.aRows = [];
     }
 
     TableHeader.prototype = {
+
+      addRow : function(oRow) {
+
+        if ( !(oRow instanceof DataGrid.TableRow) ) {
+          throw "DataGrid.TableHeader.addRow: O objeto deve ser uma instancia de DataGrid.TableRow";
+        }
+
+        this.aRows.push(oRow);
+        this.oElement.appendChild(oRow.getElement());
+
+        return this;
+      },
+
+      newRow : function(aColumns) {
+
+        if (aColumns.length == undefined) {
+          throw "DataGrid.TableHeader.newRow: Nenhuma coluna informada.";
+        }
+
+        var oRow = new DataGrid.TableRow();
+
+        if (this.oDataGrid.hasCheckbox) {
+
+          var oColumn = new DataGrid.TableColumn("M");
+          oRow.addColumn(oColumn);
+        }
+
+        for (var iRow = 0; iRow < aColumns.length; iRow++) {
+
+          var oColumn = new DataGrid.TableColumn(aColumns[iRow]);
+          oRow.addColumn(oColumn);
+        }
+
+        this.addRow(oRow);
+
+        return oRow;
+      },
 
       getElement : function() {
         return this.oElement;
@@ -261,7 +313,7 @@
         throw "Erro ao criar o header.";
       }
 
-      Object.defineProperty(this, "oDataGrid", { 
+      Object.defineProperty(this, "oDataGrid", {
         value : oDataGrid,
         enumerable : true
       });
@@ -276,10 +328,17 @@
 
     TableBody.prototype = {
 
-      addTableRow : function(oRow) {
+      /**
+       * Adiciona uma nova linha
+       *
+       * @param {DataGrid.TableBody.Row} oRow
+       * @throws
+       * @return {DataGrid.TableBody}
+       */
+      addRow : function(oRow) {
 
-        if ( !(oRow instanceof DataGrid.TableRow) ) {
-          throw "Erro ao adicionar linha.";
+        if ( !(oRow instanceof DataGrid.TableBody.Row) ) {
+          throw "DataGrid.TableBody.addRow: O objeto deve ser uma instancia de DataGrid.TableBody.Row";
         }
 
         this.aRows.push(oRow);
@@ -290,7 +349,7 @@
 
       /**
        * Cria uma nova linha a partir de um array
-       * 
+       *
        * @param  {Array}
        * @return {DataGrid.TableRow}
        */
@@ -300,7 +359,7 @@
           throw "Erro ao adicionar a linha.";
         }
 
-        var oRow = new DataGrid.TableRow();
+        var oRow = new DataGrid.TableBody.Row();
 
         if (this.oDataGrid.hasCheckbox) {
 
@@ -317,7 +376,7 @@
           oRow.addColumn(oColumn);
         }
 
-        this.addTableRow(oRow);
+        this.addRow(oRow);
 
         return oRow;
       },
@@ -346,7 +405,7 @@
     }
 
     /**
-     * DataGrid.TableBody.Row  --- Extends DataGrid.TableRow 
+     * DataGrid.TableBody.Row  --- Extends DataGrid.TableRow
      */
     ;(function(exports) {
 
@@ -379,12 +438,12 @@
         throw "Erro ao criar o header.";
       }
 
-      Object.defineProperty(this, "oDataGrid", { 
+      Object.defineProperty(this, "oDataGrid", {
         value : oDataGrid,
         enumerable : true
       });
-      
-      Object.defineProperty(this, "oElement", { 
+
+      Object.defineProperty(this, "oElement", {
         value : document.createElement("table"),
         enumerable : true
       });
@@ -399,6 +458,6 @@
 
     exports.TableFooter = TableFooter;
   })(DataGrid);
-  
+
   global.DataGrid = DataGrid;
 })(this);

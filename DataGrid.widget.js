@@ -201,6 +201,7 @@
      */
     for (var sConf in _oConfig) {
 
+
       oConfiguracao[sConf] = _oConfig[sConf];
 
       if (sConf == "columns") {

@@ -4,9 +4,10 @@
 
 .datagrid-body td {
   table-layout: fixed;
-  white-space: nowrap;
-  overflow: hidden;
-  padding: 0;
-  margin: 0;
-  border: 0;
+  white-space : nowrap;
+  overflow    : hidden;
+  padding     : 0;
+  margin      : 0;
+  border      : 1px outset #ccc;
+
 }

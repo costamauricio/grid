@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Expires" CONTENT="0">
+    <link rel="stylesheet" type="text/css" href="DataGrid.css">
+    <script language="Javascript" type="text/javascript" src="DataGrid.widget.js"></script>
+    <script language="Javascript" type="text/javascript" src="DataGrid.TableColumn.js"></script>
+    <script language="Javascript" type="text/javascript" src="DataGrid.TableRow.js"></script>
+    <script language="Javascript" type="text/javascript" src="DataGrid.TableFooter.js"></script>
+    <script language="Javascript" type="text/javascript" src="DataGrid.TableHeader.js"></script>
+    <script language="Javascript" type="text/javascript" src="DataGrid.TableBody.js"></script>
+  </head>
+  <body class="body-default">
+    <input type="button" value="cria" id="criar"/>
+    <div id="testegrid"></div>
+  </body>
+  <script>
+
+
+    oGrid = new DataGrid( document.getElementById('testegrid'), 
+        { checkbox : true,
+          height   : 300,
+          width    : 500 }
+    );
+   oGrid.addGroup("Grupo do Coiso",[
+     oGrid.addColumn(label:"Descricao",  width: "100px", wrap: true}),//addHeader
+     oGrid.addColumn(label:"Outro Coiso",width: "200px"})
+   ]);
+   oGrid.addGroup("Mais um Coiso",[
+     oGrid.addColumn(label:"Descricao aqui", width: "100px"}),
+     oGrid.addColumn(label:"Outra Coisa",    width: "200px"})
+   ]);
+   oGrid.addColumn(label:"Coiso por fora",    width: "200px"})
+
+//    oGrid.makeGrid();
+    
+    for (var x = 0; x < 1000; x++) {
+      oGrid.addRow([
+        document.createElement("input"),
+        document.createElement("input"),
+        document.createElement("input"),
+        'Registro ' + (x+1)
+      ]);
+    }
+    oGrid.makeGrid();
+
+
+
+  </script>
+</html>

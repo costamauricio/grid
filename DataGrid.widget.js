@@ -29,11 +29,33 @@
   }
 
   /**
+   * Seta a configuração baseado nos valores passados e no default
+   *
+   * @param  {Object} oConfigDefault -- Valores padrões
+   * @param  {Object} oConfig -- Valores que serão definidos
+   * @return {Object} -- Configuração final
+   */
+  global._defineConfig = function(oConfigDefault, oConfig) {
+
+    var o = {};
+
+    for (var sConf in oConfigDefault) {
+
+      o[sConf] = oConfigDefault[sConf];
+      oConfig.hasOwnProperty(sConf) && (o[sConf] = oConfig[sConf]);
+    }
+
+    return o;
+  }
+
+  /**
    * Responsável por renderizar e controlar as linhas da grid que estão visíveis no momento
    *
    * @naorela
+   * @serio_naorela
+   * @don't_touch
    */
-  var DataGridRowsRenderer = (function() {
+  DataGridRowsRenderer = (function() {
 
     'use strict';
 
@@ -56,7 +78,7 @@
         this.options = {
           item_height: 0,
           block_height: 0,
-          rows_in_block: 50,
+          rows_in_block: 25,
           rows_in_cluster: 0,
           cluster_height: 0,
           blocks_in_cluster: 4
@@ -166,7 +188,7 @@
 
       appendRows: function(aRows) {
 
-        var oFragment = document.createDocumentFragment()
+        var oFragment = document.createDocumentFragment();
 
         for (var iRow = 0; iRow < aRows.length; iRow++) {
           oFragment.appendChild(aRows[iRow].getElement());
@@ -183,112 +205,50 @@
 
   /**
    * Definição da DataGrid
+   *
+   * _oConfig.width     -- Largura
+   * _oConfig.height    -- Altura
+   * _oConfig.checkbox  -- Checkbox nas linhas
+   * _oConfig.selectAll -- Botão no header para selecionar todas as linhas
    */
-
-   _oConfig = {
+  _oConfig = {
     width : null,
     height : 200,
     checkbox : false,
-    columns : {
-      width : [],
-      align : []
-    }
+    selectAll : false
   };
 
   DataGrid = function(oElemento, oConfig) {
 
-    if ( !(oElemento instanceof Object) ) {
+    if ( !(oElemento instanceof HTMLElement) ) {
       throw "DataGrid: Elemento inválido.";
     }
 
+    var oConfiguracao = _defineConfig(_oConfig, (oConfig || {})),
+        lRenderizada = false,
+        iWidth = new String(oConfiguracao.width || window.getComputedStyle(oElemento)["width"]).replace(/[^0-9]/g, '');
 
-    var oConfiguracao = {},
-        lRenderizada = false;
+    iWidth = new Number(iWidth);
 
-    /**
-     * Seta a configuração
-     */
-    for (var sConf in _oConfig) {
-
-      oConfiguracao[sConf] = _oConfig[sConf];
-
-      if (sConf == "columns") {
-
-        for (var sSubConf in _oConfig[sConf]) {
-
-          if (oConfig instanceof Object && oConfig.hasOwnProperty(sConf) && oConfig[sConf].hasOwnProperty(sSubConf)) {
-            oConfiguracao[sConf][sSubConf] = oConfig[sConf][sSubConf];
-          }
-        }
-
-        continue;
-      }
-
-      if (oConfig instanceof Object && oConfig.hasOwnProperty(sConf)) {
-        oConfiguracao[sConf] = oConfig[sConf];
-      }
+    if (iWidth == NaN || iWidth < 1) {
+      throw "DataGrid: Largura não especificada.";
     }
 
-    _setProperty(this, "oContainer", oElemento, true);
-    _setProperty(this, "oHeader", new DataGrid.TableHeader(this));
-    _setProperty(this, "oBody",   new DataGrid.TableBody(this));
-    _setProperty(this, "oFooter", new DataGrid.TableFooter(this));
-
-    Object.defineProperty(this, 'hasCheckbox', {
+    Object.defineProperty(this, "hasCheckbox", {
       get : function() { return oConfiguracao.checkbox; },
       enumerable : true
     });
 
-    var iWidth = new Number(oConfiguracao.width || window.getComputedStyle(this.oContainer)["width"].replace(/[^0-9]/g, '')),
-        iColumns = 0;
-
-    if (oConfiguracao.columns.width.length) {
-
-      iColumns = oConfiguracao.columns.width.length;
-
-    } else {
-      throw "DataGrid: Quantidade de colunas não definida."
-    }
-
-
-    var aColumnsWidth = [],
-        iWidthTotal = iWidth;
-
-    if (this.hasCheckbox) {
-      aColumnsWidth.push(25);
-      iWidthTotal -= 25;
-    }
-
-    var aColumnsAuto = [];
-    for (var iCol = 0; iCol < iColumns; iCol++) {
-
-      var iWid = 0;
-
-      if (oConfiguracao.columns.width[iCol] != undefined && oConfiguracao.columns.width[iCol] != null) {
-        var t = new Number((oConfiguracao.columns.width[iCol]/100)*iWidthTotal);
-        iWid = new Number(t.toFixed(0));
-      } else {
-        aColumnsAuto.push(iCol);
-      }
-
-      aColumnsWidth.push(iWid);
-    }
-
-    var iDiff = (iWidthTotal+25) - aColumnsWidth.reduce(function(x, y){ return x+y; });
-
-    if (aColumnsAuto.length) {
-
-    } else {
-      aColumnsWidth[aColumnsWidth.length-1] += iDiff;
-    }
-
-    _setProperty(this, "aColumnsWidth", aColumnsWidth, true);
-    Object.defineProperty(this, "aColumnsAlign", {
-      get : function() { return oConfiguracao.columns.align; },
+    Object.defineProperty(this, "hasSelectAll", {
+      get : function() { return oConfiguracao.selectAll; },
       enumerable : true
     });
 
-    console.log(aColumnsWidth);
+    _setProperty(this, "width", iWidth, true);
+    _setProperty(this, "oContainer", oElemento, true);
+    _setProperty(this, "oHeader", new DataGrid.TableHeader(this));
+    _setProperty(this, "oBody",   new DataGrid.TableBody(this));
+    _setProperty(this, "oFooter", new DataGrid.TableFooter(this));
 
     /**
      * Renderiza a Grid
@@ -312,12 +272,14 @@
       oDivFooter.appendChild(this.oFooter.getElement());
 
       oDivBody.classList.add("datagrid-body");
+      oDivHeader.classList.add("datagrid-head");
 
       oDivHeader.style.width = iWidth + "px";
       oDivBody.style.width = iWidth + "px";
       oDivFooter.style.width = iWidth + "px";
 
       this.oBody.getElement().style.width = iWidth + "px";
+      this.oHeader.getElement().style.width = iWidth + "px";
 
       oFragment.appendChild(oDivHeader);
       oFragment.appendChild(oDivBody);
@@ -344,8 +306,41 @@
    */
   DataGrid.prototype = {
 
-    addHeaderRow : function(aColumns) {
-      return this.getTableHeader().newRow(aColumns);
+    /**
+     * Adiciona uma coluna a grid
+     *
+     * @param {String|HTMLElement} content
+     * @param {Object} oColumn
+     *
+     * {
+     *   oColumn.id -- ID da coluna (default [A-Z])
+     *   oColumn.width -- Tamanho da coluna, caso seja especificado sem medida será calculado em porcentagem (default null)
+     *   oColumn.align -- Alinhamento da coluna (default left)
+     *   oColumn.wrap -- Caso permita que a coluna tenha quebra de texto (default false)
+     * }
+     *
+     * @return {DataGrid.TableHeader.Column}
+     */
+    addColumn : function(content, oConfig) {
+      return this.getTableHeader().addColumn(content, oConfig);
+    },
+
+    /**
+     * Cria um grupo de colunas
+     * @param {String|HTMLElement} content
+     * @param {DataGrid.TableHeader.Column[]} aColumns
+     */
+    addColumnGroup : function (content, aColumns) {
+      this.getTableHeader().addColumnGroup(content, aColumns);
+      return this;
+    },
+
+    /**
+     * Adiciona uma linha a grid
+     * @param {Object|Array} columns
+     */
+    addRow : function(columns) {
+      return this.getTableBody().newRow(columns);
     },
 
     /**
@@ -353,19 +348,6 @@
      */
     getRows : function() {
       return this.getTableBody().getRows();
-    },
-
-    /**
-     * Adiciona uma nova coluna na grid
-     * @param {object[]|string[]} aColumns - Um array com o conteudo das colunas
-     * @return {DataGrid.TableRow}
-     */
-    addRow : function(aColumns) {
-      return this.getTableBody().newRow(aColumns);
-    },
-
-    getRowCount : function() {
-      return this.getRows().length;
     },
 
     /**
@@ -390,7 +372,7 @@
     },
 
     /**
-     * @return {Object}
+     * @return {HTMLElement}
      */
     getContainer : function() {
       return this.oContainer;

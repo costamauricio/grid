@@ -51,10 +51,10 @@
         return this.oDefinition.style[property];
       },
 
-      setAttribute : function(prop, value) {
+      setAttribute : function(attr, value) {
 
-        this.hasOwnProperty("oElement") && this.oElement.setAttribute(prop, value);
-        this.oDefinition.attributes[prop] = value;
+        this.hasOwnProperty("oElement") && this.oElement.setAttribute(attr, value);
+        this.oDefinition.attributes[attr] = value;
         return this;
       },
 

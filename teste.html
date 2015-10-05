@@ -16,36 +16,42 @@
   </body>
   <script>
 
-    console.time("Criando DataGrid...");
+    document.getElementById("criar").addEventListener('click', function() {
+      console.time("Criando DataGrid...");
 
-    oGrid = new DataGrid(
-        document.getElementById('testegrid'), 
-        {
+      oGrid = new DataGrid(document.getElementById('testegrid'), {
           checkbox : true,
           height   : 300,
-          width    : 500,
-          columns : {
-            width : [20, 40, 40]
+          width : 800
+        });
+
+      oGrid.addColumnGroup("Grupo do Coiso", [
+         oGrid.addColumn("Descricao", { wrap: true}),//addHeader
+         oGrid.addColumn("Outro Coiso")
+       ]);
+
+       oGrid.addColumnGroup("Mais um Coiso", [
+         oGrid.addColumn("Descricao aqui"),
+         oGrid.addColumn("Outra Coisa")
+       ]);
+
+       oGrid.addColumn("Coiso por fora");
+
+      //     oGrid.addHeaderRow(['Descricao', 'Digita Isso', 'Outra Descricao']);
+
+          for (var x = 0; x < 5000; x++) {
+            oGrid.addRow([
+                'Registro ' + (x+1),
+                document.createElement("input"),
+                "ddd",
+                "fff",
+                "ffgghg"
+                ]);
           }
-        }
-        );
 
-    oGrid.addHeaderRow(['Descricao', 'Digita Isso', 'Outra Descricao']);
-
-    for (var x = 0; x < 1000; x++) {
-      oGrid.addRow([
-          'Registro ' + (x+1),
-          document.createElement("input"),
-          document.createElement("input")
-          ]);
-    }
-
-oGrid.makeGrid();
-console.timeEnd("Criando DataGrid...");
-
-
-
-
+      oGrid.makeGrid();
+      console.timeEnd("Criando DataGrid...");
+    });
 
   </script>
 </html>

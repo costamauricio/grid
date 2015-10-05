@@ -1,13 +1,51 @@
-.datagrid-body table {
+.datagrid-head table, .datagrid-body table {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
   table-layout: fixed;
+  padding: 0;
+  margin: 0;
+  border : none;
+  border-width: 0;
+  border-spacing: 0;
+}
+
+.datagrid-head tr, .datagrid-body table {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
+  table-layout: fixed;
+  padding: 0;
+  margin: 0;
+  border : none;
+  border-width: 0;
+  border-spacing: 0;
+}
+
+.datagrid-head td {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
+  table-layout: fixed;
+  white-space : normal;
+  overflow    : hidden;
+  padding     : 0;
+  margin      : 0;
+  border      : 1px inset #333;
 }
 
 .datagrid-body td {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
   table-layout: fixed;
   white-space : nowrap;
   overflow    : hidden;
   padding     : 0;
   margin      : 0;
-  border      : 1px outset #ccc;
-
+  border      : 1px inset #333;
 }

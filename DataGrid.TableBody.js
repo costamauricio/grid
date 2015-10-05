@@ -57,16 +57,15 @@
           oCheckbox.type = "checkbox";
 
           var oColumn = new DataGrid.TableColumn(oCheckbox);
-          this.oDataGrid.aColumnsWidth[0] && oColumn.setStyle("width", this.oDataGrid.aColumnsWidth[0] + "px");
+          oColumn.setStyle("width", "25" + "px");
           oRow.addColumn(oColumn);
         }
 
-        for (var iRow = 0; iRow < aColumns.length; iRow++) {
+        for (var iCol = 0; iCol < aColumns.length; iCol++) {
 
-          var oColumn = new DataGrid.TableColumn(aColumns[iRow]),
-              iIndexRow = (this.oDataGrid.hasCheckbox ? iRow+1 : iRow);
+          var oColumn = new DataGrid.TableColumn(aColumns[iCol]);
 
-          this.oDataGrid.aColumnsWidth[iIndexRow] && oColumn.setStyle("width", this.oDataGrid.aColumnsWidth[iIndexRow] + "px");
+          oColumn.setStyle("width", this.oDataGrid.getTableHeader().getColumns()[iCol].getStyle("width"));
 
           oRow.addColumn(oColumn);
         }

@@ -290,9 +290,9 @@
       /**
        * Definindo o tamanhos da grid
        */
-      oTableHeader.getElement().style.width = iWidth + "px";
-      oTableBody  .getElement().style.width = iWidth + "px";
-      oTableFooter.getElement().style.width = iWidth + "px";
+      oTableHeader.style.width = iWidth + "px";
+      oTableBody  .style.width = iWidth + "px";
+      oTableFooter.style.width = iWidth + "px";
 
       oDivHeader.style.width = iWidth + "px";
       oDivBody  .style.width = iWidth + "px";

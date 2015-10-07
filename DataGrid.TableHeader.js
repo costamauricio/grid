@@ -149,7 +149,7 @@
           }
 
           if (this.oDataGrid.hasCheckbox) {
-            oRow.addCheckboxColumn("M").setStyle("width", iWidthCheckboxColumn + "px")
+            oRow.addCheckboxColumn("M");
           }
 
           this.aRows.push(oRow);
@@ -177,6 +177,7 @@
       Row.prototype.addCheckboxColumn = function(content) {
 
         var oColumn = new DataGrid.TableHeader.Column(content);
+        oColumn.getElement().classList.add("datagrid-checkbox-column");
         this.aColumns.splice(0, 0, oColumn);
 
         return oColumn;

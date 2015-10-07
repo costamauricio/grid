@@ -2,23 +2,26 @@
  * Estilos Iniciais
  */
 table.datagrid-table, 
-table.datagrid-table >  tr, 
-table.datagrid-table >  tr > td, 
-{
+table.datagrid-table > tr, 
+table.datagrid-table > tr > td {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   table-layout: fixed;
   margin: 0;
-  border-spacing: 0;
-}
-
+  font-weight: normal;
+}                      
+table.datagrid-table {
+  border-spacing:0;
+}                       
 table.datagrid-table >  tr > td {
-
-  border  : 1px outset #ccc;
-  padding : 2px;
-  margin  : 0 auto;
-  background-color:#DDD;
+                       
+  border          : 1px outset  #ccc;
+  padding         : 1px;       
+  padding-left    : 3px;       
+  padding-right   : 3px;
+  margin          : 0 auto;
+  background-color: #DDD;
 }
 
 .datagrid-body > table.datagrid-table > tr > td {
@@ -29,9 +32,20 @@ table.datagrid-table >  tr > td {
   /* overflow: hidden;*/
 }
 
-.datagrid-body > table.datagrid-table >  tr > td > input:first-child:last-child {
+.datagrid-body > table.datagrid-table >  tr > td > input:first-child:last-child:not([type="checkbox"]) {
   width:100%;
 }
+
+/**
+ * Estilos do Checkbox
+ */
+.datagrid-table > tr > td.datagrid-checkbox-column {
+
+  width:25px;
+  padding: 0;
+  text-align: center;
+}
+
 
 
 /**

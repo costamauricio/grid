@@ -1,51 +1,41 @@
-.datagrid-head table, .datagrid-body table {
+.datagrid-head table, 
+.datagrid-head table >  tr, 
+.datagrid-head table >  tr > td, 
+.datagrid-body table,
+.datagrid-body table >  tr,
+.datagrid-body table >  tr > td,
+.datagrid-foot table,
+.datagrid-foot table >  tr,
+.datagrid-foot table >  tr > td
+
+{
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-
   table-layout: fixed;
-  padding: 0;
-  margin: 0;
-  border : none;
-  border-width: 0;
-  border-spacing: 0;
 }
 
-.datagrid-head tr, .datagrid-body table {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+.datagrid-head table >  tr > td,
+.datagrid-body table >  tr > td,
+.datagrid-foot table >  tr > td {
 
-  table-layout: fixed;
-  padding: 0;
-  margin: 0;
-  border : none;
-  border-width: 0;
-  border-spacing: 0;
+  border  : 1px outset #ccc;
+  padding : 2px;
 }
 
-.datagrid-head td {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 
-  table-layout: fixed;
-  white-space : normal;
-  overflow    : hidden;
-  padding     : 0;
-  margin      : 0;
-  border      : 1px inset #333;
+.datagrid-head table >  tr > td,
+.datagrid-foot table >  tr > td {
+  background-color:#DDD;
+}
+.datagrid-body table >  tr > td {
+  background-color:#FFF;
 }
 
-.datagrid-body td {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-
-  table-layout: fixed;
-  white-space : nowrap;
-  overflow    : hidden;
-  padding     : 0;
-  margin      : 0;
-  border      : 1px inset #333;
+.datagrid-head, .datagrid-body, .datagrid-foot {
+  overflow: hidden;
+}
+.datagrid-body table >  tr > td > input:first-child:last-child {
+  width:100%;
+  width:100%;
 }

@@ -5,8 +5,7 @@
 
     'use strict';
 
-    var iWidthCheckboxColumn = 25,
-        _columnRange = {
+    var _columnRange = {
           start : 65,
           end : 90
         };
@@ -21,7 +20,7 @@
      */
     function _updateColumnsWidth(oTableHeader) {
 
-      var iWidth = oTableHeader.oDataGrid.width - (oTableHeader.oDataGrid.hasCheckbox ? iWidthCheckboxColumn : 0),
+      var iWidth = oTableHeader.oDataGrid.width - (oTableHeader.oDataGrid.hasCheckbox ? oTableHeader.oDataGrid.widthCheckbox : 0),
           iWidthTotal = iWidth;
 
       var aColumns = oTableHeader.getColumns().filter(function(oColumn) {
@@ -149,7 +148,7 @@
           }
 
           if (this.oDataGrid.hasCheckbox) {
-            oRow.addCheckboxColumn("M").setStyle("width", iWidthCheckboxColumn + "px")
+            oRow.addCheckboxColumn("M").setStyle("width", this.oDataGrid.widthCheckbox + "px")
           }
 
           this.aRows.push(oRow);
@@ -181,7 +180,7 @@
 
           return oColumn;
         }
-      }
+      });
 
       exports.Row = Row;
     })(TableHeader);

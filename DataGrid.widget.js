@@ -256,7 +256,6 @@
     });
 
     _setProperty(this, "width", iWidth, true);
-    _setProperty(this, "widthCheckbox", 25, true);
     _setProperty(this, "oContainer", oElemento, true);
     _setProperty(this, "oHeader", new DataGrid.TableHeader(this));
     _setProperty(this, "oBody",   new DataGrid.TableBody(this));
@@ -336,6 +335,12 @@
       return this;
     }
   };
+
+  /**
+   * Define o tamanho da coluna do checkbox
+   * @type {Number}
+   */
+  DataGrid.iCheckboxWidth = 25;
 
   /**
    * Definição da Grid

@@ -5,30 +5,27 @@
 
     'use strict';
 
-    var iWidthCheckboxColumn = 25,
-        _columnRange = {
-          start : 65,
-          end : 90
-        };
-
+    /**
+     * Pega o próximo ID da coluna
+     * @param  {DataGrid.TableHeader} oTableHeader
+     * @return {String}
+     */
     function _getNextColumnId(oTableHeader) {
-      return String.fromCharCode(_columnRange.start + oTableHeader.getColumns().length);
+      return String.fromCharCode(65 + oTableHeader.getColumns().length);
     }
 
     /**
-     * Calcula o tamanho das colunas
-     * @todo  Refatorar [muto sono]
+     * Calcula o tamanho das colunas baseado no tamanho disponível
      */
     function _updateColumnsWidth(oTableHeader) {
 
-      var iWidth = oTableHeader.oDataGrid.width - (oTableHeader.oDataGrid.hasCheckbox ? iWidthCheckboxColumn : 0),
-          iWidthTotal = iWidth;
+      var iWidth = oTableHeader.oDataGrid.width - (oTableHeader.oDataGrid.hasCheckbox ? DataGrid.iCheckboxWidth : 0);
 
       var aColumns = oTableHeader.getColumns().filter(function(oColumn) {
 
         var width = new String(oColumn.getWidth() || '');
 
-        if (width == '' || width.match(/^\d*$/)) {
+        if (width == '' || width.match(/^\d*$|^\d*\%$/)) {
           return true;
         }
 
@@ -41,7 +38,8 @@
       aColumns = aColumns.filter(function(oColumn) {
 
         if (oColumn.getWidth()) {
-          var width = parseInt( (+oColumn.getWidth())/100 * iWidth );
+
+          var width = parseInt( (+oColumn.getWidth().replace(/[^\d]/g, ''))/100 * iWidth );
           oColumn.setStyle("width", width + "px");
 
           iCalc += width;
@@ -51,19 +49,24 @@
         return true;
       });
 
+      iWidth -= iCalc;
+
       if (aColumns.length) {
 
-        iWidth -= iCalc;
         iCalc = 0;
+
         for (var iCol = 0; iCol < aColumns.length; iCol++) {
+
           var width = parseInt(iWidth/aColumns.length);
           iCalc += width;
           aColumns[iCol].setStyle("width", width + "px");
         }
+
         iWidth -= iCalc;
       }
 
       if (iWidth != 0) {
+
         var oColumn = oTableHeader.getColumns()[oTableHeader.getColumns().length-1];
 
         if (aColumns.length) {
@@ -137,22 +140,54 @@
         return this;
       },
 
+      getColumnsGroupRow : function() {
+
+      },
+
+      getColumnsRow : function() {
+
+        var oRow = new DataGrid.TableHeader.Row();
+
+        for (var iCol = 0; iCol < this.aColumns.length; iCol++) {
+          oRow.addColumn(this.aColumns[iCol]);
+        }
+
+        if (this.oDataGrid.hasCheckbox) {
+
+          var content = "M";
+
+          if (this.oDataGrid.hasSelectAll) {
+
+            content = document.createElement("a");
+            content.innerHTML = "M";
+
+            content.onclick = function() {
+              /**
+               * aqui vai o select all
+               */
+            }
+          }
+
+          oRow.addCheckboxColumn(content);
+        }
+
+        return oRow;
+      },
+
+      /**
+       * @return {HTMLElement}
+       */
       getElement : function() {
 
         if (!this.hasOwnProperty("oElement")) {
 
           _setProperty(this, "oElement", document.createElement("table"), true);
 
-          var oRow = new DataGrid.TableHeader.Row();
-          for (var iCol = 0; iCol < this.aColumns.length; iCol++) {
-            oRow.addColumn(this.aColumns[iCol]);
-          }
+          var oRowGroup = this.getColumnsGroupRow(),
+              oRowColumns = this.getColumnsRow();
 
-          if (this.oDataGrid.hasCheckbox) {
-            oRow.addCheckboxColumn("M");
-          }
-
-          this.aRows.push(oRow);
+          oRowGroup && this.aRows.push(this.getColumnsRow());
+          oRowColumns && this.aRows.push(this.getColumnsRow());
 
           for (var iRow = 0; iRow < this.aRows.length; iRow++) {
             this.oElement.appendChild(this.aRows[iRow].getElement());
@@ -172,16 +207,18 @@
         DataGrid.TableRow.call(this);
       }
 
-      Row.prototype = Object.create(DataGrid.TableRow.prototype);
+      Row.prototype = _extends(Object.create(DataGrid.TableRow.prototype), {
 
-      Row.prototype.addCheckboxColumn = function(content) {
+        addCheckboxColumn : function(content) {
 
-        var oColumn = new DataGrid.TableHeader.Column(content);
-        oColumn.getElement().classList.add("datagrid-checkbox-column");
-        this.aColumns.splice(0, 0, oColumn);
+          var oColumn = new DataGrid.TableHeader.Column(content);
+          this.aColumns.splice(0, 0, oColumn);
 
-        return oColumn;
-      }
+          oColumn.setStyle("width", DataGrid.iCheckboxWidth + "px")
+
+          return oColumn;
+        }
+      });
 
       exports.Row = Row;
     })(TableHeader);
@@ -205,28 +242,29 @@
         _setProperty(this, "oConfig", _defineConfig(_oConfig, (oConfig || {})) );
       }
 
-      Column.prototype = Object.create(DataGrid.TableColumn.prototype);
+      Column.prototype = _extends(Object.create(DataGrid.TableColumn.prototype), {
 
-      Column.prototype.getId = function() {
-        return this.oConfig.id;
-      };
+        getId : function() {
+          return this.oConfig.id;
+        },
 
-      Column.prototype.setId = function(sId) {
-        this.oConfig.id = sId;
-        return this;
-      }
+        setId : function(sId) {
+          this.oConfig.id = sId;
+          return this;
+        },
 
-      Column.prototype.wrap = function() {
-        return this.oConfig.wrap;
-      }
+        wrap : function() {
+          return this.oConfig.wrap;
+        },
 
-      Column.prototype.getWidth = function() {
-        return this.oConfig.width;
-      }
+        getWidth : function() {
+          return this.oConfig.width;
+        },
 
-      Column.prototype.getAlign = function() {
-        return this.oConfig.align;
-      }
+        getAlign : function() {
+          return this.oConfig.align;
+        }
+      });
 
       exports.Column = Column;
     })(TableHeader);

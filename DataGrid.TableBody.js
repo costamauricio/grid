@@ -57,8 +57,8 @@
           oCheckbox.type = "checkbox";
 
           var oColumn = new DataGrid.TableColumn(oCheckbox);
-          //oColumn.setStyle("width", "25" + "px");//Trocado por css
-          oColumn.getElement().classList.add("datagrid-checkbox-column");
+          oColumn.setStyle("width", DataGrid.iCheckboxWidth + "px");
+
           oRow.addColumn(oColumn);
         }
 
@@ -108,7 +108,12 @@
         DataGrid.TableRow.call(this);
       }
 
-      Row.prototype = Object.create(DataGrid.TableRow.prototype);
+      Row.prototype = _extends(Object.create(DataGrid.TableRow.prototype), {
+
+        selectRow : function() {
+
+        }
+      });
 
       exports.Row = Row;
     })(TableBody);

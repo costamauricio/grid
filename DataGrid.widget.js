@@ -50,6 +50,10 @@
 
   global._extends = function(oObj, oExt) {
 
+    oNew = {}
+
+    // for ()
+
     for (var sProp in oExt) {
       oObj[sProp] = oExt;
     }
@@ -285,7 +289,7 @@
       oDivHeader.appendChild(oTableHeader);
       oDivBody.appendChild(oTableBody);
       oDivFooter.appendChild(oTableFooter);
-      
+
       /**
        * Definindo Classes para melhorar o uso de css
        */
@@ -303,9 +307,9 @@
       oTableBody  .style.width = iWidth + "px";
       oTableFooter.style.width = iWidth + "px";
 
-      oDivHeader.style.width = iWidth + "px";
-      oDivBody  .style.width = iWidth + "px";
-      oDivFooter.style.width = iWidth + "px";
+      // oDivHeader.style.width = iWidth + "px";
+      // oDivBody  .style.width = iWidth + "px";
+      // oDivFooter.style.width = iWidth + "px";
 
       /**
        * Adicionando os Elementos ao fragmento

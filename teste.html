@@ -16,13 +16,13 @@
   </body>
   <script>
 
-    document.getElementById("criar").addEventListener('click', function() {
+    (function() {
       console.time("Criando DataGrid...");
 
       oGrid = new DataGrid(document.getElementById('testegrid'), {
           checkbox : true,
-          height   : 300,
-          width : 800
+          height   : 400,
+          width    : 800
         });
 
       oGrid.addColumnGroup("Grupo do Coiso", [
@@ -51,7 +51,7 @@
 
       oGrid.makeGrid();
       console.timeEnd("Criando DataGrid...");
-    });
+    })();
 
   </script>
 </html>

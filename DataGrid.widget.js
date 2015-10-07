@@ -48,6 +48,15 @@
     return o;
   }
 
+  global._extends = function(oObj, oExt) {
+
+    for (var sProp in oExt) {
+      oObj[sProp] = oExt;
+    }
+
+    return oObj;
+  }
+
   /**
    * Responsável por renderizar e controlar as linhas da grid que estão visíveis no momento
    *
@@ -73,7 +82,7 @@
 
       init : function() {
 
-        _setProperty(this, "oContent", this.oDataGrid.getTableBody().getElement(), true);
+        _setProperty(this, "oContainer", this.oDataGrid.getTableBody().getElement(), true);
 
         this.options = {
           item_height: 0,
@@ -107,7 +116,7 @@
           return;
         }
 
-        if (this.oContent.children.length <= 1) {
+        if (this.oContainer.children.length <= 1) {
           this.appendRows([aRows[0]]);
         }
 
@@ -124,7 +133,7 @@
           return;
         }
 
-        var nodes = this.oContent.children;
+        var nodes = this.oContainer.children;
 
         opts.item_height = nodes[0].offsetHeight;
 
@@ -194,8 +203,8 @@
           oFragment.appendChild(aRows[iRow].getElement());
         }
 
-        this.oContent.innerHTML = '';
-        this.oContent.appendChild(oFragment);
+        this.oContainer.innerHTML = '';
+        this.oContainer.appendChild(oFragment);
       }
     };
 

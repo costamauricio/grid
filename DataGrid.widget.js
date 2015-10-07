@@ -50,12 +50,8 @@
 
   global._extends = function(oObj, oExt) {
 
-    oNew = {}
-
-    // for ()
-
     for (var sProp in oExt) {
-      oObj[sProp] = oExt;
+      oObj[sProp] = oExt[sProp];
     }
 
     return oObj;
@@ -258,6 +254,7 @@
     });
 
     _setProperty(this, "width", iWidth, true);
+    _setProperty(this, "widthCheckbox", 25, true);
     _setProperty(this, "oContainer", oElemento, true);
     _setProperty(this, "oHeader", new DataGrid.TableHeader(this));
     _setProperty(this, "oBody",   new DataGrid.TableBody(this));
@@ -307,9 +304,9 @@
       oTableBody  .style.width = iWidth + "px";
       oTableFooter.style.width = iWidth + "px";
 
-      // oDivHeader.style.width = iWidth + "px";
-      // oDivBody  .style.width = iWidth + "px";
-      // oDivFooter.style.width = iWidth + "px";
+    // oDivHeader.style.width = iWidth + "px";
+    // oDivBody  .style.width = iWidth + "px";
+    // oDivFooter.style.width = iWidth + "px";
 
       /**
        * Adicionando os Elementos ao fragmento

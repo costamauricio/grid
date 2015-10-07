@@ -1,41 +1,52 @@
-.datagrid-head table, 
-.datagrid-head table >  tr, 
-.datagrid-head table >  tr > td, 
-.datagrid-body table,
-.datagrid-body table >  tr,
-.datagrid-body table >  tr > td,
-.datagrid-foot table,
-.datagrid-foot table >  tr,
-.datagrid-foot table >  tr > td
-
+/**
+ * Estilos Iniciais
+ */
+table.datagrid-table, 
+table.datagrid-table >  tr, 
+table.datagrid-table >  tr > td, 
 {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   table-layout: fixed;
+  margin: 0;
+  border-spacing: 0;
 }
 
-.datagrid-head table >  tr > td,
-.datagrid-body table >  tr > td,
-.datagrid-foot table >  tr > td {
+table.datagrid-table >  tr > td {
 
   border  : 1px outset #ccc;
   padding : 2px;
-}
-
-
-.datagrid-head table >  tr > td,
-.datagrid-foot table >  tr > td {
+  margin  : 0 auto;
   background-color:#DDD;
 }
-.datagrid-body table >  tr > td {
+
+.datagrid-body > table.datagrid-table > tr > td {
   background-color:#FFF;
 }
 
 .datagrid-head, .datagrid-body, .datagrid-foot {
-  overflow: hidden;
+  /* overflow: hidden;*/
 }
-.datagrid-body table >  tr > td > input:first-child:last-child {
-  width:100%;
+
+.datagrid-body > table.datagrid-table >  tr > td > input:first-child:last-child {
   width:100%;
 }
+
+
+/**
+ * estilos do cabecalho
+ */
+.datagrid-head > table.datagrid-table > tr > td {
+  font-weight: bold;
+  text-align:center;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+/**
+ * estilos do Corpo
+ */
+
+/**
+ * Estilos do Rodapé
+ */

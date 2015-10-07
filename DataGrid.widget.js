@@ -311,7 +311,7 @@
       oFragment.appendChild(oSubContainer);
 
       oDivBody.style.height = oConfiguracao.height + "px";
-      oDivBody.style["overflow"] = "hidden";
+//      oDivBody.style["overflow"] = "hidden";
 
       /**
        * Adiciona o fragmento ao Container

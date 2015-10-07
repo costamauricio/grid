@@ -13,6 +13,7 @@ table.datagrid-table > tr > td {
 }                      
 table.datagrid-table {
   border-spacing:0;
+   overflow: auto;
 }                       
 table.datagrid-table >  tr > td {
                        
@@ -29,7 +30,8 @@ table.datagrid-table >  tr > td {
 }
 
 .datagrid-head, .datagrid-body, .datagrid-foot {
-  /* overflow: hidden;*/
+   overflow: hidden;
+   overflow-y: overlay;
 }
 
 .datagrid-body > table.datagrid-table >  tr > td > input:first-child:last-child:not([type="checkbox"]) {

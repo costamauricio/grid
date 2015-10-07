@@ -172,14 +172,15 @@
         DataGrid.TableRow.call(this);
       }
 
-      Row.prototype = Object.create(DataGrid.TableRow.prototype);
+      Row.prototype = _extends(Object.create(DataGrid.TableRow.prototype), {
 
-      Row.prototype.addCheckboxColumn = function(content) {
+        addCheckboxColumn : function(content) {
 
-        var oColumn = new DataGrid.TableHeader.Column(content);
-        this.aColumns.splice(0, 0, oColumn);
+          var oColumn = new DataGrid.TableHeader.Column(content);
+          this.aColumns.splice(0, 0, oColumn);
 
-        return oColumn;
+          return oColumn;
+        }
       }
 
       exports.Row = Row;
@@ -204,28 +205,29 @@
         _setProperty(this, "oConfig", _defineConfig(_oConfig, (oConfig || {})) );
       }
 
-      Column.prototype = Object.create(DataGrid.TableColumn.prototype);
+      Column.prototype = _extends(Object.create(DataGrid.TableColumn.prototype), {
 
-      Column.prototype.getId = function() {
-        return this.oConfig.id;
-      };
+        getId : function() {
+          return this.oConfig.id;
+        },
 
-      Column.prototype.setId = function(sId) {
-        this.oConfig.id = sId;
-        return this;
-      }
+        setId : function(sId) {
+          this.oConfig.id = sId;
+          return this;
+        },
 
-      Column.prototype.wrap = function() {
-        return this.oConfig.wrap;
-      }
+        wrap : function() {
+          return this.oConfig.wrap;
+        },
 
-      Column.prototype.getWidth = function() {
-        return this.oConfig.width;
-      }
+        getWidth : function() {
+          return this.oConfig.width;
+        },
 
-      Column.prototype.getAlign = function() {
-        return this.oConfig.align;
-      }
+        getAlign : function() {
+          return this.oConfig.align;
+        }
+      });
 
       exports.Column = Column;
     })(TableHeader);

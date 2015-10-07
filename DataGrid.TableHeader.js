@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var _columnRange = {
+    var iWidthCheckboxColumn = 25,
+        _columnRange = {
           start : 65,
           end : 90
         };
@@ -20,7 +21,7 @@
      */
     function _updateColumnsWidth(oTableHeader) {
 
-      var iWidth = oTableHeader.oDataGrid.width - (oTableHeader.oDataGrid.hasCheckbox ? oTableHeader.oDataGrid.widthCheckbox : 0),
+      var iWidth = oTableHeader.oDataGrid.width - (oTableHeader.oDataGrid.hasCheckbox ? iWidthCheckboxColumn : 0),
           iWidthTotal = iWidth;
 
       var aColumns = oTableHeader.getColumns().filter(function(oColumn) {
@@ -148,7 +149,7 @@
           }
 
           if (this.oDataGrid.hasCheckbox) {
-            oRow.addCheckboxColumn("M").setStyle("width", this.oDataGrid.widthCheckbox + "px")
+            oRow.addCheckboxColumn("M");
           }
 
           this.aRows.push(oRow);
@@ -171,16 +172,16 @@
         DataGrid.TableRow.call(this);
       }
 
-      Row.prototype = _extends(Object.create(DataGrid.TableRow.prototype), {
+      Row.prototype = Object.create(DataGrid.TableRow.prototype);
 
-        addCheckboxColumn : function(content) {
+      Row.prototype.addCheckboxColumn = function(content) {
 
-          var oColumn = new DataGrid.TableHeader.Column(content);
-          this.aColumns.splice(0, 0, oColumn);
+        var oColumn = new DataGrid.TableHeader.Column(content);
+        oColumn.getElement().classList.add("datagrid-checkbox-column");
+        this.aColumns.splice(0, 0, oColumn);
 
-          return oColumn;
-        }
-      });
+        return oColumn;
+      }
 
       exports.Row = Row;
     })(TableHeader);
@@ -204,29 +205,28 @@
         _setProperty(this, "oConfig", _defineConfig(_oConfig, (oConfig || {})) );
       }
 
-      Column.prototype = _extends(Object.create(DataGrid.TableColumn.prototype), {
+      Column.prototype = Object.create(DataGrid.TableColumn.prototype);
 
-        getId : function() {
-          return this.oConfig.id;
-        },
+      Column.prototype.getId = function() {
+        return this.oConfig.id;
+      };
 
-        setId : function(sId) {
-          this.oConfig.id = sId;
-          return this;
-        },
+      Column.prototype.setId = function(sId) {
+        this.oConfig.id = sId;
+        return this;
+      }
 
-        wrap : function() {
-          return this.oConfig.wrap;
-        },
+      Column.prototype.wrap = function() {
+        return this.oConfig.wrap;
+      }
 
-        getWidth : function() {
-          return this.oConfig.width;
-        },
+      Column.prototype.getWidth = function() {
+        return this.oConfig.width;
+      }
 
-        getAlign : function() {
-          return this.oConfig.align;
-        }
-      });
+      Column.prototype.getAlign = function() {
+        return this.oConfig.align;
+      }
 
       exports.Column = Column;
     })(TableHeader);

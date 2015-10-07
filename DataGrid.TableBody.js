@@ -57,7 +57,8 @@
           oCheckbox.type = "checkbox";
 
           var oColumn = new DataGrid.TableColumn(oCheckbox);
-          oColumn.setStyle("width", "25" + "px");
+          //oColumn.setStyle("width", "25" + "px");//Trocado por css
+          oColumn.getElement().classList.add("datagrid-checkbox-column");
           oRow.addColumn(oColumn);
         }
 

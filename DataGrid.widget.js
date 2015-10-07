@@ -233,6 +233,8 @@
       throw "DataGrid: Elemento inválido.";
     }
 
+    oElemento.classList.add("datagrid-container");
+
     var oConfiguracao = _defineConfig(_oConfig, (oConfig || {})),
         lRenderizada = false,
         iWidth = new String(oConfiguracao.width || window.getComputedStyle(oElemento)["width"]).replace(/[^0-9]/g, '');
@@ -278,6 +280,7 @@
       var oDivHeader    = document.createElement("div"),
           oDivBody      = document.createElement("div"),
           oDivFooter    = document.createElement("div"),
+          oSubContainer = document.createElement("div"),
           oTableHeader  = this.oHeader.getElement(),
           oTableBody    = this.oBody.getElement(),
           oTableFooter  = this.oFooter.getElement(),
@@ -294,8 +297,9 @@
       oTableBody  .classList.add("datagrid-table");
       oTableFooter.classList.add("datagrid-table");
 
-      oDivBody.classList.add("datagrid-body");
       oDivHeader.classList.add("datagrid-head");
+      oDivBody.classList.add("datagrid-body");
+      oDivFooter.classList.add("datagrid-foot");
 
       /**
        * Definindo o tamanhos da grid
@@ -304,19 +308,20 @@
       oTableBody  .style.width = iWidth + "px";
       oTableFooter.style.width = iWidth + "px";
 
-    // oDivHeader.style.width = iWidth + "px";
-    // oDivBody  .style.width = iWidth + "px";
-    // oDivFooter.style.width = iWidth + "px";
+      oDivHeader.style.width = iWidth + "px";
+      oDivBody  .style.width = iWidth + "px";
+      oDivFooter.style.width = iWidth + "px";
 
       /**
        * Adicionando os Elementos ao fragmento
        */
-      oFragment.appendChild(oDivHeader);
-      oFragment.appendChild(oDivBody);
-      oFragment.appendChild(oDivFooter);
+      oSubContainer.appendChild(oDivHeader);
+      oSubContainer.appendChild(oDivBody);
+      oSubContainer.appendChild(oDivFooter);
+      oFragment.appendChild(oSubContainer);
 
       oDivBody.style.height = oConfiguracao.height + "px";
-      oDivBody.style["overflow"] = "hidden";
+//      oDivBody.style["overflow"] = "hidden";
 
       /**
        * Adiciona o fragmento ao Container

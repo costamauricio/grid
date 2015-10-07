@@ -262,34 +262,55 @@
         throw "DataGrid: Grid já renderizada.";
       }
 
-      var oDivHeader = document.createElement("div"),
-          oDivBody = document.createElement("div"),
-          oDivFooter = document.createElement("div"),
-          oFragment = document.createDocumentFragment();
+      /**
+       * Declarando variaveis
+       */
+      var oDivHeader    = document.createElement("div"),
+          oDivBody      = document.createElement("div"),
+          oDivFooter    = document.createElement("div"),
+          oTableHeader  = this.oHeader.getElement(),
+          oTableBody    = this.oBody.getElement(),
+          oTableFooter  = this.oFooter.getElement(),
+          oFragment     = document.createDocumentFragment();
 
-      oDivHeader.appendChild(this.oHeader.getElement());
-      oDivBody.appendChild(this.oBody.getElement());
-      oDivFooter.appendChild(this.oFooter.getElement());
+      oDivHeader.appendChild(oTableHeader);
+      oDivBody.appendChild(oTableBody);
+      oDivFooter.appendChild(oTableFooter);
+      
+      /**
+       * Definindo Classes para melhorar o uso de css
+       */
+      oTableHeader.classList.add("datagrid-table");
+      oTableBody  .classList.add("datagrid-table");
+      oTableFooter.classList.add("datagrid-table");
 
       oDivBody.classList.add("datagrid-body");
       oDivHeader.classList.add("datagrid-head");
 
+      /**
+       * Definindo o tamanhos da grid
+       */
+      oTableHeader.getElement().style.width = iWidth + "px";
+      oTableBody  .getElement().style.width = iWidth + "px";
+      oTableFooter.getElement().style.width = iWidth + "px";
+
       oDivHeader.style.width = iWidth + "px";
-      oDivBody.style.width = iWidth + "px";
+      oDivBody  .style.width = iWidth + "px";
       oDivFooter.style.width = iWidth + "px";
 
-      this.oBody.getElement().style.width = iWidth + "px";
-      this.oHeader.getElement().style.width = iWidth + "px";
-
+      /**
+       * Adicionando os Elementos ao fragmento
+       */
       oFragment.appendChild(oDivHeader);
       oFragment.appendChild(oDivBody);
       oFragment.appendChild(oDivFooter);
 
       oDivBody.style.height = oConfiguracao.height + "px";
-      oDivBody.style["overflow-y"] = "auto";
-      oDivBody.style["overflow-x"] = "hidden";
-      oDivBody.style["padding-right"] = 12 + "px";
+      oDivBody.style["overflow"] = "hidden";
 
+      /**
+       * Adiciona o fragmento ao Container
+       */
       this.oContainer.appendChild(oFragment);
 
       _setProperty(this, "Renderer", new DataGridRowsRenderer(this, oDivBody));

@@ -290,13 +290,13 @@
       /**
        * Definindo o tamanhos da grid
        */
-      oTableHeader.style.width = iWidth + "px";
-      oTableBody  .style.width = iWidth + "px";
-      oTableFooter.style.width = iWidth + "px";
+   //  oTableHeader.style.width = iWidth + "px";
+   //  oTableBody  .style.width = iWidth + "px";
+   //  oTableFooter.style.width = iWidth + "px";
 
-      oDivHeader.style.width = iWidth + "px";
-      oDivBody  .style.width = iWidth + "px";
-      oDivFooter.style.width = iWidth + "px";
+   //  oDivHeader.style.width = iWidth + "px";
+   //  oDivBody  .style.width = iWidth + "px";
+   //  oDivFooter.style.width = iWidth + "px";
 
       /**
        * Adicionando os Elementos ao fragmento

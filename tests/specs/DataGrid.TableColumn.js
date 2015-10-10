@@ -39,4 +39,28 @@ describe('DataGrid.TableColumn Test Suite', function() {
 
   });
 
+  it('expect to change style', function() {
+    tableColumn.setStyle('display', 'none');
+    expect(tableColumn.getElement().style.display).toBe('none');
+    expect(tableColumn.getStyle('display')).toBe('none');
+  });
+
+  it('expect to set an attribute', function() {
+
+    tableColumn.setAttribute('test', 'test');
+    expect(tableColumn.getElement().getAttribute('test')).toBe('test');
+  });
+
+  it('expect to manage CSS classes', function() {
+
+    tableColumn.addClass('test');
+    expect(tableColumn.getElement().classList.contains('test')).toBe(true);
+    tableColumn.removeClass('test');
+    expect(tableColumn.getElement().classList.contains('test')).toBe(false);
+  });
+
+  it('expect to return HTMLTableCellElement', function() {
+    expect(tableColumn.getElement() instanceof HTMLTableCellElement).toBe(true);
+  });
+
 });

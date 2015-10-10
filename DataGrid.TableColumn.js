@@ -28,11 +28,11 @@
         if (value instanceof HTMLElement) {
 
           this.getElement().appendChild(value);
-          return TableColumn;
+          return this;
         }
 
         this.getElement().innerHTML = value;
-        return TableColumn;
+        return this;
       },
 
       setStyle : function(property, value) {
@@ -65,7 +65,7 @@
         return this;
       },
 
-      removeClass : function(sClassname) {
+      removeClass : function(sClassName) {
 
         var oDef = this.oDefinition;
 

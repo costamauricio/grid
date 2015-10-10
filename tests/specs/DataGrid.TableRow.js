@@ -35,8 +35,25 @@ describe('DataGrid.TableRow Test Suite', function() {
 
   });
 
+  it('expect to throw exception get column by index', function() {
+    expect(function() {
+      tableRow.getColumnByIndex(1);
+    }).toThrow("DataGrid.TableRow: Indice indefinido.");
+  });
+
   it('expect to return HTMLTableRowElement', function() {
     expect(tableRow.getElement() instanceof HTMLTableRowElement).toBe(true);
+  });
+
+  it('expect to return populated HTMLTableRowElement', function() {
+
+    var tableColumn1 = new DataGrid.TableColumn(), tableColumn2 = new DataGrid.TableColumn();
+
+    tableRow.addColumn(tableColumn1);
+    tableRow.addColumn(tableColumn2);
+
+    expect(tableRow.getElement() instanceof HTMLTableRowElement).toBe(true);
+    expect(tableRow.getElement().children.length).toBe(2)
   });
 
   it('expect to change style', function() {

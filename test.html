@@ -6,17 +6,21 @@
     <script type="text/javascript" src="bower_components/jasmine-core/lib/jasmine-core/jasmine.js"></script>
     <script type="text/javascript" src="bower_components/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
     <script type="text/javascript" src="bower_components/jasmine-core/lib/jasmine-core/boot.js"></script>
+    <script type="text/javascript" src="bower_components/blanket/dist/qunit/blanket.js" ></script>
+    <!-- blanket 1.1.7 workaround to be compatible with jasmine 2.x -->
+    <script type="text/javascript" src="bower_components/blanket/src/adapters/jasmine-2.x-blanket.js"></script>
 
-    <script language="Javascript" type="text/javascript" src="DataGrid.widget.js"></script>
-    <script language="Javascript" type="text/javascript" src="DataGrid.TableColumn.js"></script>
-    <script language="Javascript" type="text/javascript" src="DataGrid.TableRow.js"></script>
-    <script language="Javascript" type="text/javascript" src="DataGrid.TableFooter.js"></script>
-    <script language="Javascript" type="text/javascript" src="DataGrid.TableHeader.js"></script>
-    <script language="Javascript" type="text/javascript" src="DataGrid.TableBody.js"></script>
+    <script data-cover type="text/javascript" src="DataGrid.widget.js"></script>
+    <script data-cover type="text/javascript" src="DataGrid.TableColumn.js"></script>
+    <script data-cover type="text/javascript" src="DataGrid.TableRow.js"></script>
+    <script data-cover type="text/javascript" src="DataGrid.TableFooter.js"></script>
+    <script data-cover type="text/javascript" src="DataGrid.TableHeader.js"></script>
+    <script data-cover type="text/javascript" src="DataGrid.TableBody.js"></script>
 
     <!-- specs -->
     <script type="text/javascript" src="tests/specs/DataGrid.TableRow.js"></script>
     <script type="text/javascript" src="tests/specs/DataGrid.TableColumn.js"></script>
+    <!-- <script type="text/javascript" src="tests/specs/DataGrid.TableHeader.js"></script> -->
 
 
   </head>

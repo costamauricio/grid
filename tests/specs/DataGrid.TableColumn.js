@@ -41,7 +41,10 @@ describe('DataGrid.TableColumn Test Suite', function() {
 
   it('expect to change style', function() {
     tableColumn.setStyle('display', 'none');
+    expect(tableColumn.getStyle('display')).toBe('none');
     expect(tableColumn.getElement().style.display).toBe('none');
+
+    // after 'oElement' populated
     expect(tableColumn.getStyle('display')).toBe('none');
   });
 

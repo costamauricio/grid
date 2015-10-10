@@ -20,5 +20,8 @@
   ],
   "dependencies": {
     "jasmine-core": "jasmine#~2.3.4"
+  },
+  "devDependencies": {
+    "blanket": "blanket#~1.1.7"
   }
 }

@@ -120,7 +120,7 @@
 
       var oRow = new DataGrid.TableHeader.Row(),
           aColumns = TableHeader.getColumns(),
-          sLastGroup = null,
+          lastGroup = null,
           iColspan = 1;
 
       for (var iCol = 0; iCol < aColumns.length; iCol++) {
@@ -134,22 +134,22 @@
           return (aColumn.length > 0);
         })
 
-        var sGroup = '';
+        var group = '';
 
         if (aGroupColumn.length) {
 
-          if (aGroupColumn[0].sName == sLastGroup) {
+          if (aGroupColumn[0].name == lastGroup) {
 
             oRow.getColumns().length && oRow.getColumns()[oRow.getColumns().length-1].setAttribute("colspan", ++iColspan);
             continue;
           }
 
-          sGroup = aGroupColumn[0].sName;
+          group = aGroupColumn[0].name;
         }
 
-        var oColumn = new DataGrid.TableHeader.Column(sGroup);
+        var oColumn = new DataGrid.TableHeader.Column(group);
         oRow.addColumn(oColumn);
-        sLastGroup = sGroup;
+        lastGroup = group;
         iColspan = 1;
       }
 
@@ -173,7 +173,7 @@
       /**
        * Adiciona uma nova coluna
        *
-       * @param {String|HTMLElement} content
+       * @param {String}|{HTMLElement} content
        * @param {Object} oConfig
        * @return {DataGrid.TableHeader.Column}
        */
@@ -190,14 +190,14 @@
 
       /**
        * Adiciona um agrupamento de colunas
-       * @param {String} sGroup
+       * @param {String}|{HTMLElement} group
        * @param {DataGrid.TableHeader.Column[]} aColumns
        * @return {DataGrid.TableHeader}
        */
-      addColumnGroup : function(sGroup, aColumns) {
+      addColumnGroup : function(group, aColumns) {
 
         var oGroup = {
-          sName : sGroup,
+          name : group,
           aColumns : []
         };
 
@@ -323,6 +323,14 @@
     ;(function(exports) {
       'use strict';
 
+      /**
+       * Configuração da coluna
+       *
+       * _oConfig.id    -- Identificador da coluna
+       * _oConfig.width -- Largura ("100px" | 20 | "20%")
+       * _oConfig.align -- Alinhamento ("right" | "left" | "center")
+       * _oConfig.wrap  -- Se o texto da célula deve ter quebra de linha
+       */
       var _oConfig = {
         id : null,
         width : null,

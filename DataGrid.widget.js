@@ -354,10 +354,10 @@
      * @param {Object} oColumn
      *
      * {
-     *   oColumn.id -- ID da coluna (default [A-Z])
+     *   oColumn.id    -- ID da coluna (default [A-Z])
      *   oColumn.width -- Tamanho da coluna, caso seja especificado sem medida será calculado em porcentagem (default null)
      *   oColumn.align -- Alinhamento da coluna (default left)
-     *   oColumn.wrap -- Caso permita que a coluna tenha quebra de texto (default false)
+     *   oColumn.wrap  -- Caso permita que a coluna tenha quebra de texto (default false)
      * }
      *
      * @return {DataGrid.TableHeader.Column}
@@ -368,7 +368,7 @@
 
     /**
      * Cria um grupo de colunas
-     * @param {String|HTMLElement} content
+     * @param {String}|{HTMLElement} content
      * @param {DataGrid.TableHeader.Column[]} aColumns
      */
     addColumnGroup : function (content, aColumns) {
@@ -378,10 +378,11 @@
 
     /**
      * Adiciona uma linha a grid
-     * @param {Object|Array} columns
+     * @param {Object}|{Array} columns
+     * @return {DataGrid.TableBody.Row}
      */
     addRow : function(columns) {
-      return this.getTableBody().newRow(columns);
+      return this.getTableBody().parseRow(columns);
     },
 
     /**

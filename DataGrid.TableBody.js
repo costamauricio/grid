@@ -32,48 +32,62 @@
           throw "DataGrid.TableBody.addRow: O objeto deve ser uma instancia de DataGrid.TableBody.Row";
         }
 
+        if (this.oDataGrid.hasCheckbox) {
+          oRow.addCheckboxColumn();
+        }
+
         this.aRows.push(oRow);
 
         return this;
       },
 
       /**
-       * Cria uma nova linha a partir de um array
+       * Cria uma nova linha a partir de um array ou um objeto
        *
-       * @param  {Array}
-       * @return {DataGrid.TableRow}
+       * @param  {Array}|{Object}
+       * @throws
+       * @return {DataGrid.TableBody.Row}
        */
-      newRow : function(aColumns) {
+      parseRow : function(columns) {
 
-        if (aColumns.length == undefined) {
-          throw "Erro ao adicionar a linha.";
+        var aColumns = this.oDataGrid.getTableHeader().getColumns(),
+            oRow = new DataGrid.TableBody.Row();
+
+        /**
+         * Gera a partir de um array
+         */
+        if (Object.prototype.toString.call(columns) == "[object Array]") {
+
+          for (var iCol = 0; iCol < aColumns.length; iCol++) {
+
+            var oColumn = new DataGrid.TableColumn(columns[iCol] || '');
+
+            oColumn.setStyle("width", aColumns[iCol].getStyle("width"));
+            oRow.addColumn(oColumn);
+          }
+
+          this.addRow(oRow);
+          return oRow;
         }
 
-        var oRow = new DataGrid.TableBody.Row();
+        /**
+         * Gera a partir de um objeto
+         */
+        if (Object.prototype.toString.call(columns) == "[object Object]") {
 
-        if (this.oDataGrid.hasCheckbox) {
+          for (var iCol = 0; iCol < aColumns.length; iCol++) {
 
-          var oCheckbox = document.createElement("input");
-          oCheckbox.type = "checkbox";
+            var oColumn = new DataGrid.TableColumn(columns[aColumns[iCol].getId()] || '');
 
-          var oColumn = new DataGrid.TableColumn(oCheckbox);
-          oColumn.setStyle("width", DataGrid.iCheckboxWidth + "px");
+            oColumn.setStyle("width", aColumns[iCol].getStyle("width"));
+            oRow.addColumn(oColumn);
+          }
 
-          oRow.addColumn(oColumn);
+          this.addRow(oRow);
+          return oRow;
         }
 
-        for (var iCol = 0; iCol < aColumns.length; iCol++) {
-
-          var oColumn = new DataGrid.TableColumn(aColumns[iCol]);
-
-          oColumn.setStyle("width", this.oDataGrid.getTableHeader().getColumns()[iCol].getStyle("width"));
-
-          oRow.addColumn(oColumn);
-        }
-
-        this.addRow(oRow);
-
-        return oRow;
+        throw "DataGrid.TableBody.parseRow: Erro ao criar linha.";
       },
 
       /**
@@ -125,6 +139,24 @@
       }
 
       Row.prototype = _extends(Object.create(DataGrid.TableRow.prototype), {
+
+        /**
+         * Adiciona a coluna responsável pelo checkbox no início da linha
+         *
+         * @return {DataGrid.TableHeader.Column}
+         */
+        addCheckboxColumn : function() {
+
+          var oCheckbox = document.createElement("input");
+          oCheckbox.type = "checkbox";
+
+          var oColumn = new DataGrid.TableColumn(oCheckbox);
+          this.aColumns.splice(0, 0, oColumn);
+
+          oColumn.addClass("datagrid-checkbox-column");
+
+          return oColumn;
+        },
 
         selectRow : function() {
 

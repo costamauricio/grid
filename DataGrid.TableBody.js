@@ -87,6 +87,22 @@
         return this;
       },
 
+      /**
+       * @todo Implementar
+       */
+      selectAll : function() {
+
+        if (!this.oDataGrid.hasCheckbox) {
+          return false;
+        }
+
+        for (var iRow = 0; iRow < this.aRows.length; iRow++) {
+          var oCheckbox = this.aRows[iRow].getColumns()[0].getElement().children[0];
+
+          oCheckbox.checked = !oCheckbox.checked;
+        }
+      },
+
       getRows : function() {
         return this.aRows;
       },

@@ -21,6 +21,9 @@
 
       var iWidth = oTableHeader.oDataGrid.width - (oTableHeader.oDataGrid.hasCheckbox ? DataGrid.iCheckboxWidth : 0);
 
+      /**
+       * Primeiro calcula todas as colunas com tamanho fixo
+       */
       var aColumns = oTableHeader.getColumns().filter(function(oColumn) {
 
         var width = new String(oColumn.getWidth() || '');
@@ -34,7 +37,11 @@
         return false;
       });
 
-      var iCalc = 0;
+      /**
+       * Agora calcula todas as colunas com tamanho relativo
+       */
+      var iWidthCalc = 0;
+
       aColumns = aColumns.filter(function(oColumn) {
 
         if (oColumn.getWidth()) {
@@ -42,29 +49,33 @@
           var width = parseInt( (+oColumn.getWidth().replace(/[^\d]/g, ''))/100 * iWidth );
           oColumn.setStyle("width", width + "px");
 
-          iCalc += width;
+          iWidthCalc += width;
           return false;
         }
 
         return true;
       });
 
-      iWidth -= iCalc;
+      iWidth -= iWidthCalc;
 
+      /**
+       * Agora calcula todas as colunas com tamanho automático (que não tenha tamanho setado)
+       */
       if (aColumns.length) {
 
-        iCalc = 0;
+        var iWidthAuto = parseInt(iWidth/aColumns.length);
 
         for (var iCol = 0; iCol < aColumns.length; iCol++) {
-
-          var width = parseInt(iWidth/aColumns.length);
-          iCalc += width;
-          aColumns[iCol].setStyle("width", width + "px");
+          aColumns[iCol].setStyle("width", iWidthAuto + "px");
         }
 
-        iWidth -= iCalc;
+        iWidth -= (iWidthAuto*aColumns.length);
       }
 
+      /**
+       * Caso o calculo tenha resultado em alguma diferença com o tqamanho total, joga esta diferença na última coluna
+       * da grid, ou na última coluna que tenha tamanho altomático (quando disponível)
+       */
       if (iWidth != 0) {
 
         var oColumn = oTableHeader.getColumns()[oTableHeader.getColumns().length-1];
@@ -73,8 +84,76 @@
           oColumn = aColumns[aColumns.length-1];
         }
 
-        oColumn.setStyle("width", (+oColumn.getStyle("width").replace(/[^\d]/g, '')+iWidth) + "px");
+        oColumn.setStyle("width", (+oColumn.getStyle("width").replace(/[^\d]/g, '') + iWidth) + "px");
       }
+    }
+
+    /**
+     * Cria a linha das colunas
+     *
+     * @param  {DataGrid.TableHeader} TableHeader
+     * @return {DataGrid.TableHeader.Row}
+     */
+    function _createColumnsRow(TableHeader) {
+
+      var oRow = new DataGrid.TableHeader.Row(),
+          aColumns = TableHeader.getColumns();
+
+      for (var iCol = 0; iCol < aColumns.length; iCol++) {
+        oRow.addColumn(aColumns[iCol]);
+      }
+
+      return oRow;
+    }
+
+    /**
+     * Cria a linha dos grupos das colunas
+     *
+     * @param  {DataGrid.TableHeader} TableHeader
+     * @return {DataGrid.TableHeader.Row}
+     */
+    function _createGroupColumnsRow(TableHeader) {
+
+      if (!TableHeader.aColumnGroups.length) {
+        return null;
+      }
+
+      var oRow = new DataGrid.TableHeader.Row(),
+          aColumns = TableHeader.getColumns(),
+          sLastGroup = null,
+          iColspan = 1;
+
+      for (var iCol = 0; iCol < aColumns.length; iCol++) {
+
+        var aGroupColumn = TableHeader.aColumnGroups.filter(function(oGroup) {
+
+          var aColumn = oGroup.aColumns.filter(function(oColumn) {
+            return oColumn == aColumns[iCol];
+          });
+
+          return (aColumn.length > 0);
+        })
+
+        var sGroup = '';
+
+        if (aGroupColumn.length) {
+
+          if (aGroupColumn[0].sName == sLastGroup) {
+
+            oRow.getColumns().length && oRow.getColumns()[oRow.getColumns().length-1].setAttribute("colspan", ++iColspan);
+            continue;
+          }
+
+          sGroup = aGroupColumn[0].sName;
+        }
+
+        var oColumn = new DataGrid.TableHeader.Column(sGroup);
+        oRow.addColumn(oColumn);
+        sLastGroup = sGroup;
+        iColspan = 1;
+      }
+
+      return oRow;
     }
 
     var TableHeader = function(oDataGrid) {
@@ -96,6 +175,7 @@
        *
        * @param {String|HTMLElement} content
        * @param {Object} oConfig
+       * @return {DataGrid.TableHeader.Column}
        */
       addColumn : function(content, oConfig) {
 
@@ -108,8 +188,30 @@
         return oColumn;
       },
 
-      addColumnGroup : function(sGroup, aRows) {
+      /**
+       * Adiciona um agrupamento de colunas
+       * @param {String} sGroup
+       * @param {DataGrid.TableHeader.Column[]} aColumns
+       * @return {DataGrid.TableHeader}
+       */
+      addColumnGroup : function(sGroup, aColumns) {
 
+        var oGroup = {
+          sName : sGroup,
+          aColumns : []
+        };
+
+        for (var iCol = 0; iCol < aColumns.length; iCol++) {
+
+          if ( !(aColumns[iCol] instanceof DataGrid.TableHeader.Column) ) {
+            throw "DataGrid.TableHeader.addColumnGroup: A Coluna deve ser uma instancia de DataGrid.TableHeader.Column";
+          }
+
+          oGroup.aColumns.push(aColumns[iCol]);
+        }
+
+        this.aColumnGroups.push(oGroup);
+        return this;
       },
 
       /**
@@ -125,53 +227,19 @@
        * @param {DataGrid.TableHeader.Row} oRow
        * @return {DataGrid.TableHeader}
        */
-      addRow : function(oRow) {
+      addRow : function(oRow, checkboxContent) {
 
         if ( !(oRow instanceof DataGrid.TableHeader.Row) ) {
           throw "DataGrid.TableHeader.addRow: O objeto deve ser uma instancia de DataGrid.TableHeader.Row";
         }
 
         if (this.oDataGrid.hasCheckbox) {
-          oRow.addCheckboxColumn('');
+          oRow.addCheckboxColumn(checkboxContent || '');
         }
 
         this.aRows.push(oRow);
 
         return this;
-      },
-
-      getColumnsGroupRow : function() {
-
-      },
-
-      getColumnsRow : function() {
-
-        var oRow = new DataGrid.TableHeader.Row();
-
-        for (var iCol = 0; iCol < this.aColumns.length; iCol++) {
-          oRow.addColumn(this.aColumns[iCol]);
-        }
-
-        if (this.oDataGrid.hasCheckbox) {
-
-          var content = "M";
-
-          if (this.oDataGrid.hasSelectAll) {
-
-            content = document.createElement("a");
-            content.innerHTML = "M";
-
-            content.onclick = function() {
-              /**
-               * aqui vai o select all
-               */
-            }
-          }
-
-          oRow.addCheckboxColumn(content);
-        }
-
-        return oRow;
       },
 
       /**
@@ -183,11 +251,31 @@
 
           _setProperty(this, "oElement", document.createElement("table"), true);
 
-          var oRowGroup = this.getColumnsGroupRow(),
-              oRowColumns = this.getColumnsRow();
+          var oRowGroup = _createGroupColumnsRow(this),
+              oRowColumns = _createColumnsRow(this),
+              checkboxContent = '',
+              _this = this;
 
-          oRowGroup && this.aRows.push(this.getColumnsRow());
-          oRowColumns && this.aRows.push(this.getColumnsRow());
+          /**
+           * Caso a grid tenha checkbox, define o conteúdo da coluna
+           */
+          if (this.oDataGrid.hasCheckbox) {
+
+            checkboxContent = "M";
+
+            if (this.oDataGrid.hasSelectAll) {
+
+              checkboxContent = document.createElement("a");
+              checkboxContent.innerHTML = "M";
+
+              checkboxContent.onclick = function() {
+                _this.oDataGrid.getTableBody().selectAll();
+              }
+            }
+          }
+
+          oRowGroup && this.addRow(oRowGroup);
+          oRowColumns && this.addRow(oRowColumns, checkboxContent);
 
           for (var iRow = 0; iRow < this.aRows.length; iRow++) {
             this.oElement.appendChild(this.aRows[iRow].getElement());
@@ -209,12 +297,18 @@
 
       Row.prototype = _extends(Object.create(DataGrid.TableRow.prototype), {
 
+        /**
+         * Adiciona a coluna responsável pelo checkbox no início da linha
+         *
+         * @param {String}|{HTMLElement} content
+         * @return {DataGrid.TableHeader.Column}
+         */
         addCheckboxColumn : function(content) {
 
           var oColumn = new DataGrid.TableHeader.Column(content);
           this.aColumns.splice(0, 0, oColumn);
 
-          oColumn.setStyle("width", DataGrid.iCheckboxWidth + "px")
+          oColumn.addClass("datagrid-checkbox-column");
 
           return oColumn;
         }

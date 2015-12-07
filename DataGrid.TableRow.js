@@ -1,3 +1,61 @@
+/**
+ * DataGrid.TableRow
+ */
+;(function(exports) {
+
+  'use strict';
+
+  var TableRow = function() {
+    _setProperty(this, "aColumns", [], true);
+  }
+
+  TableRow.prototype = {
+
+    /**
+     * @param {DataGrid.TableColumn} oColumn
+     */
+    addColumn : function(oColumn) {
+
+      if ( !(oColumn instanceof DataGrid.TableColumn) ) {
+        throw "DataGrid.TableRow: Erro ao adicionar a coluna.";
+      }
+
+      this.aColumns.push(oColumn);
+      return this;
+    },
+
+    /**
+     * Retorna a Coluna pelo indice
+     *
+     * @param  {integer} iIndex
+     * @throw
+     * @return {DataGrid.TableColumn}
+     */
+    getColumnByIndex : function(iIndex) {
+
+      if (this.aColumns[iIndex] == undefined) {
+        throw "DataGrid.TableRow: Indice indefinido.";
+      }
+
+      return this.aColumns[iIndex];
+    },
+
+    getColumns : function() {
+      return this.aColumns;
+    }
+  }
+
+  exports.TableRow = TableRow;
+})(DataGrid);
+
+
+
+
+
+
+
+
+
   /**
    * DataGrid.TableRow
    */
@@ -68,4 +126,4 @@
     }
 
     exports.TableRow = TableRow;
-  })(DataGrid);
+  });

@@ -282,8 +282,7 @@
           oSubContainer = document.createElement("div"),
           oTableHeader  = this.oHeader.getElement(),
           oTableBody    = this.oBody.getElement(),
-          oTableFooter  = this.oFooter.getElement(),
-          oFragment     = document.createDocumentFragment();
+          oTableFooter  = this.oFooter.getElement();
 
       oDivHeader.appendChild(oTableHeader);
       oDivBody.appendChild(oTableBody);
@@ -293,7 +292,7 @@
        * Definindo Classes para melhorar o uso de css
        */
       oTableHeader.classList.add("datagrid-table");
-      oTableBody  .classList.add("datagrid-table");
+      oTableBody.classList.add("datagrid-table");
       oTableFooter.classList.add("datagrid-table");
 
       oDivHeader.classList.add("datagrid-head");
@@ -304,11 +303,11 @@
        * Definindo o tamanhos da grid
        */
       oTableHeader.style.width = iWidth + "px";
-      oTableBody  .style.width = iWidth + "px";
+      oTableBody.style.width = iWidth + "px";
       oTableFooter.style.width = iWidth + "px";
 
       oDivHeader.style.width = iWidth + "px";
-      oDivBody  .style.width = iWidth + "px";
+      oDivBody.style.width = iWidth + "px";
       oDivFooter.style.width = iWidth + "px";
 
       /**
@@ -317,15 +316,17 @@
       oSubContainer.appendChild(oDivHeader);
       oSubContainer.appendChild(oDivBody);
       oSubContainer.appendChild(oDivFooter);
-      oFragment.appendChild(oSubContainer);
 
+      /**
+       * @TODO Controle da altura
+       */
       oDivBody.style.height = oConfiguracao.height + "px";
 //      oDivBody.style["overflow"] = "hidden";
 
       /**
        * Adiciona o fragmento ao Container
        */
-      this.oContainer.appendChild(oFragment);
+      this.oContainer.appendChild(oSubContainer);
 
       _setProperty(this, "Renderer", new DataGridRowsRenderer(this, oDivBody));
       this.Renderer.init();

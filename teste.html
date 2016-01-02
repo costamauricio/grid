@@ -11,7 +11,6 @@
     <script language="Javascript" type="text/javascript" src="DataGrid.TableBody.js"></script>
   </head>
   <body class="body-default">
-    <input type="button" value="cria" id="criar"/>
     <div id="testegrid"></div>
   </body>
   <script>
@@ -27,32 +26,31 @@
         });
 
       oGrid.addColumnGroup("Grupo do Coiso", [
-        oGrid.addColumn("Descricao", { wrap: true }),//addHeader
+        oGrid.addColumn("Descricao", { wrap: true, align: "center" }),//addHeader
         oGrid.addColumn("Outro Coiso"),
         oGrid.addColumn("Descricao aqui")
       ]);
 
-      oGrid.addColumnGroup("Mais um Coiso", [
+      // oGrid.addColumnGroup("Mais um Coiso", [
         oGrid.addColumn("Outra Coisa"),
         oGrid.addColumn("Coiso por fora")
-      ]);
+      // ]);
 
 
-      //     oGrid.addHeaderRow(['Descricao', 'Digita Isso', 'Outra Descricao']);
+      for (var x = 0; x < 2000; x++) {
 
-          for (var x = 0; x < 5000; x++) {
-            var oButton = document.createElement("input");
-            oButton.type = "button";
-            oButton.value = 'Foi'
+        var oButton = document.createElement("input");
+        oButton.type = "button";
+        oButton.value = 'Foi'
 
-            oGrid.addRow([
-                'Registro ' + (x+1),
-                document.createElement("input"),
-                "ddd",
-                "fff",
-                oButton
-                ]);
-          }
+        oGrid.addRow([
+            'Registro ' + (x+1),
+            document.createElement("input"),
+            "ddd",
+            "fff",
+            oButton
+            ]);
+      }
 
       oGrid.makeGrid();
       console.timeEnd("Criando DataGrid...");

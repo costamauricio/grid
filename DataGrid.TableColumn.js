@@ -1,3 +1,40 @@
+/**
+ * DataGrid.TableColumn
+ */
+;(function(exports) {
+
+  'use strict';
+
+  var TableColumn = function(conteudo) {
+    this.setValue(conteudo);
+  }
+
+  TableColumn.prototype = {
+
+    value : '',
+
+    /**
+     * Seta o valor da coluna
+     * @param {string|HTMLElement} value
+     */
+    setValue : function(value) {
+
+      this.value = value;
+      return this;
+    }
+  }
+
+  exports.TableColumn = TableColumn;
+})(DataGrid);
+
+
+
+
+
+
+
+
+
   /**
    * DataGrid.TableColumn
    */
@@ -92,4 +129,4 @@
     }
 
     exports.TableColumn = TableColumn;
-  })(DataGrid);
+  });
